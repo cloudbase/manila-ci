@@ -140,7 +140,7 @@ echo ZUUL_SITE=$ZUUL_SITE >> /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID
 # Set ZUUL IP in hosts file
 ZUUL_MANILA="10.21.7.43"
 if ! grep -qi zuul /etc/hosts ; then
-    echo "$ZUUL_MANILA zuul-manila.openstack.tld"  >> /etc/hosts
+    run_ssh_cmd_with_retry ubuntu@$FLOATING_IP $DEVSTACK_SSH_KEY "echo '$ZUUL_MANILA zuul-manila.openstack.tld' | sudo tee -a /etc/hosts"
 fi
 
 # get locally the qcow2 windows image used by tempest (image is created with local.sh)
