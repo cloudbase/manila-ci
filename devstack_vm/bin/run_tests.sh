@@ -30,5 +30,5 @@ testr run --subunit --parallel --load-list=$RUN_TESTS_LIST | subunit-trace -n -f
 
 RET=$?
 cd /home/ubuntu/tempest/
-python /home/ubuntu/bin/subunit2html.py /home/ubuntu/tempest/subunit-output.log
+/usr/local/bin/subunit2html /home/ubuntu/tempest/subunit-output.log
 exit $RET
