@@ -44,14 +44,14 @@ ssh_cmd_logs_sv "if [ ! -d $LOG_ARCHIVE_DIR ]; then mkdir -p $LOG_ARCHIVE_DIR; e
 echo "Downloading logs"
 scp -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $DEVSTACK_SSH_KEY ubuntu@$DEVSTACK_FLOATING_IP:/home/ubuntu/aggregate.tar.gz "aggregate-$NAME.tar.gz"
 
-echo "Before gzip:"
-ls -lia `dirname $CONSOLE_LOG`
+#echo "Before gzip:"
+#ls -lia `dirname $CONSOLE_LOG`
 
 echo "GZIP:"
 gzip -v9 $CONSOLE_LOG
 
-echo "After gzip:"
-ls -lia `dirname $CONSOLE_LOG`
+#echo "After gzip:"
+#ls -lia `dirname $CONSOLE_LOG`
 
 echo "Uploading logs"
 scp -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $LOGS_SSH_KEY "aggregate-$NAME.tar.gz" logs@logs.openstack.tld:$LOG_ARCHIVE_DIR/aggregate-logs.tar.gz

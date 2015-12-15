@@ -162,10 +162,6 @@ ExecRetry {
 }
 
 ExecRetry {
-    # 20 Aug # cherry-pick for Claudiu's fixed until they are merged
-    pushd C:\OpenStack\build\openstack\nova
-    git fetch https://review.openstack.org/openstack/nova refs/changes/20/213720/5
-    cherry_pick FETCH_HEAD
     # end of cherry-pick
     & pip install C:\OpenStack\build\openstack\nova
     if ($LastExitCode) { Throw "Failed to install nova fom repo" }

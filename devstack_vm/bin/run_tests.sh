@@ -9,6 +9,12 @@ testr init
 TEMPEST_DIR="/home/ubuntu/tempest"
 EXCLUDED_TESTS="$TEMPEST_DIR/excluded_tests.txt"
 RUN_TESTS_LIST="$TEMPEST_DIR/test_list.txt"
+log_file="/home/ubuntu/tempest/subunit-output.log"
+results_html_file="/home/ubuntu/tempest/results.html"
+tempest_output_file="/home/ubuntu/tempest/tempest-output.log"
+subunit_stats_file="/home/ubuntu/tempest/subunit_stats.log"
+basedir="/home/ubuntu/bin"
+
 mkdir -p "$TEMPEST_DIR"
 
 # Checkout stable commit for tempest to avoid possible
@@ -26,9 +32,13 @@ if [ $res -ne 0 ]; then
     exit $res
 fi
 
-testr run --subunit --parallel --load-list=$RUN_TESTS_LIST | subunit-trace -n -f > /home/ubuntu/tempest/tempest-output.log 2>&1
+testr run --subunit --parallel --load-list=$RUN_TESTS_LIST  > $log_file 2>&1
 
-RET=$?
+cat $log_file | subunit-trace -n -f > $tempest_output_file 2>&1 || true
+
 cd /home/ubuntu/tempest/
-/usr/local/bin/subunit2html /home/ubuntu/tempest/subunit-output.log
-exit $RET
+
+echo "Generating HTML report..."
+python $basedir/subunit2html.py $log_file $results_html_file
+
+subunit-stats $log_file > $subunit_stats_file

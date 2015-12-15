@@ -361,7 +361,9 @@ function SetUserLogonAsServiceRights($UserName)
     $privilege = "SeServiceLogonRight"
     if (![PSCarbon.Lsa]::GetPrivileges($UserName).Contains($privilege))
     {
+	write-host "Changing privileges"
         [PSCarbon.Lsa]::GrantPrivileges($UserName, $privilege)
+        write-host "Done changing privileges"
     }
 }
 
@@ -386,10 +388,14 @@ Function Set-ServiceAcctCreds
     } else {
         $hostname = hostname
     }
-
+    write-host "Running SetUserLogonAsServiceRights $hostname\$serviceUsername"
     SetUserLogonAsServiceRights "$hostname\$serviceUsername"
-
+    write-host "Done SetUserLogonAsServiceRights $hostname\$serviceUsername"
+    
+    write-host "Running: $service.Change($null,$null,$null,$null,$null,$null,$hostname\$serviceUsername,$servicePassword)"
     $service.Change($null,$null,$null,$null,$null,$null,"$hostname\$serviceUsername",$servicePassword)
+    write-host "Done: $service.Change($null,$null,$null,$null,$null,$null,$hostname\$serviceUsername,$servicePassword)"
+
 }
 
 Function Check-Service
@@ -430,8 +436,10 @@ Function Check-Service
         {
             New-Item -Path $serviceFileLocation -ItemType directory
         }
-        Catch
+        Catch [Exception]
         {
+            write-host $_.Exception.GetType().FullName;
+            write-host $_.Exception.Message;
             Throw "Can't create service file folder"
         }
     }
@@ -446,8 +454,10 @@ Function Check-Service
         {
             Invoke-WebRequest -Uri "$downloadLocation/$serviceFileName" -OutFile "$serviceFileLocation\$serviceFileName"
         }
-        Catch
+        Catch [Exception]
         {
+            write-host $_.Exception.GetType().FullName;
+            write-host $_.Exception.Message;
             Throw "Error downloading the service file executable."
         }
     }
@@ -462,8 +472,10 @@ Function Check-Service
         {
             New-Service -name "$serviceName" -binaryPathName "`"$serviceFileLocation\$serviceFileName`" $serviceName `"$serviceExecutable`" --config-file `"$serviceConfig`"" -displayName "$serviceName" -description "$serviceDescription" -startupType $serviceStartMode
         }
-        Catch
+        Catch [Exception]
         {
+            write-host $_.Exception.GetType().FullName;
+            write-host $_.Exception.Message;
             Throw "Error creating the service $serviceName"
         }
     }
@@ -485,8 +497,10 @@ Function Check-Service
         {
             Set-ServiceAcctCreds $serviceName
         }
-        Catch
+        Catch [Exception]
         {
+	    write-host $_.Exception.GetType().FullName; 
+	    write-host $_.Exception.Message;
             Throw "Error setting service account credentials for $serviceName"
         }
     }

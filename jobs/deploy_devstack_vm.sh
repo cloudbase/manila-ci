@@ -50,7 +50,7 @@ then
     set -e
 fi
 
-devstack_image="devstack-71v1"
+devstack_image="devstack-71v2"
 echo "Image used is: $devstack_image"
 
 echo "Deploying devstack $NAME"

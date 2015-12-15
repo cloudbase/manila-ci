@@ -24,4 +24,6 @@ then
     exit 1
 fi
 
+echo "Joining Hyper-V node $hyperv_node"
+
 join_hyperv $WIN_USER $WIN_PASS $hyperv_node
