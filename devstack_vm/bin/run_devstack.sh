@@ -69,6 +69,7 @@ sudo pip install -U kombu
 sudo pip install -U pbr
 #sudo pip install -U networking-hyperv
 sudo pip install -U /opt/stack/networking-hyperv
+sudo pip install -U os-testr
 
 # Install PyWinrm for manila
 sudo pip install -U git+https://github.com/petrutlucian94/pywinrm
