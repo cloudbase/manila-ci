@@ -17,11 +17,12 @@ neutron subnet-update $subnet_id --dns_nameservers list=true 8.8.8.8 8.8.4.4
 TEMPEST_CONFIG=/opt/stack/tempest/etc/tempest.conf
 
 echo "Updating tempest settings"
-iniset $TEMPEST_CONFIG identity username demo
-iniset $TEMPEST_CONFIG identity password Passw0rd
-iniset $TEMPEST_CONFIG identity tenant_name demo
-iniset $TEMPEST_CONFIG identity alt_username alt_demo
-iniset $TEMPEST_CONFIG identity alt_password Passw0rd
+#iniset $TEMPEST_CONFIG identity username demo
+#iniset $TEMPEST_CONFIG identity password Passw0rd
+#iniset $TEMPEST_CONFIG identity tenant_name demo
+#iniset $TEMPEST_CONFIG identity alt_username alt_demo
+#iniset $TEMPEST_CONFIG identity alt_password Passw0rd
+
 iniset $TEMPEST_CONFIG identity admin_username admin
 iniset $TEMPEST_CONFIG identity admin_password Passw0rd
 iniset $TEMPEST_CONFIG identity admin_tenant_name admin
