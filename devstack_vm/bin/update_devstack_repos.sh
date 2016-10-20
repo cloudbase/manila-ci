@@ -1,5 +1,8 @@
 #!/bin/bash
 
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+. $DIR/utils.sh
+
 BASEDIR="/opt/stack"
 
 PROJECT="openstack/manila"
@@ -73,5 +76,5 @@ popd
 pushd $BASEDIR/cinder
 #temporary fix for multiple volumes to one instance bug
 #https://bugs.launchpad.net/tempest/+bug/1633535
-git revert --no-edit 6f174b412696bfa6262a5bea3ac42f45efbbe2ce
+git_revert 6f174b412696bfa6262a5bea3ac42f45efbbe2ce
 popd
