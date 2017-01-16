@@ -30,6 +30,7 @@ fi
 export NAME=$NAME
 
 echo NAME=$NAME > /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
+echo ZUUL_BRANCH=$ZUUL_BRANCH >> /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.txt
 
 echo JOB_TYPE=$JOB_TYPE >> /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 
@@ -125,6 +126,7 @@ nova interface-attach --net-id "$NET_ID" "$VM_ID" || emit_error "Failed to attac
 
 echo "Copy scripts to devstack VM"
 scp -v -r -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" -i $DEVSTACK_SSH_KEY /usr/local/src/manila-ci/devstack_vm/* ubuntu@$DEVSTACK_FLOATING_IP:/home/ubuntu/
+run_ssh_cmd_with_retry ubuntu@$DEVSTACK_FLOATING_IP $DEVSTACK_SSH_KEY "sed -i '3 i\branch=$ZUUL_BRANCH' /home/ubuntu/devstack/local.sh"
 
 VLAN_RANGE=`exec_with_retry2 5 5 nonverbose /usr/local/src/manila-ci/vlan_allocation.py -a $VM_ID`
 if [ ! -z "$VLAN_RANGE" ]; then
