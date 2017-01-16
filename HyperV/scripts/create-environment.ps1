@@ -165,7 +165,7 @@ else
 }
 Add-Content "$env:APPDATA\pip\pip.ini" $pip_conf_content
 
-cp $templateDir\distutils.cfg C:\Python27\Lib\distutils\distutils.cfg
+#cp $templateDir\distutils.cfg C:\Python27\Lib\distutils\distutils.cfg
 
 function cherry_pick($commit) {
     $eapSet = $ErrorActionPreference
@@ -244,8 +244,9 @@ if ($? -eq $false){
     Throw "Error writting neutron_hyperv_agent.conf"
 }
 
-cp "$templateDir\policy.json" "$configDir\"
-cp "$templateDir\interfaces.template" "$configDir\"
+#cp "$templateDir\policy.json" "$configDir\"
+cp \\$devstackIP\openstack\policy.json "$configDir\"
+#cp "$templateDir\interfaces.template" "$configDir\"
 
 $hasNovaExec = Test-Path c:\Python27\Scripts\nova-compute.exe
 if ($hasNovaExec -eq $false){
