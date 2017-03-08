@@ -1,8 +1,9 @@
 #!/bin/bash
 
+basedir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 echo "Collecting logs"
 
-source /usr/local/src/manila-ci/jobs/utils.sh
+source $basedir/utils.sh
 
 set -x
 

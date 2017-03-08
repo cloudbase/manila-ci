@@ -5,11 +5,12 @@ function emit_error(){
     exit 1
 }
 
+basedir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 # Loading OpenStack credentials
 source /home/jenkins-slave/tools/keystonerc_admin
 
 # Loading functions
-source /usr/local/src/manila-ci/jobs/utils.sh
+source $basedir/utils.sh
 
 set -e
 
@@ -113,9 +114,9 @@ wait_for_listening_port $FIXED_IP 22 30 || { nova console-log "$VM_ID" ; exit 1;
 sleep 5
 
 echo "Copy scripts to devstack VM"
-scp -v -r -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" -i $DEVSTACK_SSH_KEY /usr/local/src/manila-ci/devstack_vm/* ubuntu@$FIXED_IP:/home/ubuntu/
+scp -v -r -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" -i $DEVSTACK_SSH_KEY $basedir/../devstack_vm/* ubuntu@$FIXED_IP:/home/ubuntu/
 
-VLAN_RANGE=`exec_with_retry2 5 5 nonverbose /usr/local/src/manila-ci/vlan_allocation.py -a $VM_ID`
+VLAN_RANGE=`exec_with_retry2 5 5 nonverbose $basedir/../vlan_allocation.py -a $VM_ID`
 if [ ! -z "$VLAN_RANGE" ]; then
     run_ssh_cmd_with_retry ubuntu@$FIXED_IP $DEVSTACK_SSH_KEY "sed -i 's/TENANT_VLAN_RANGE.*/TENANT_VLAN_RANGE='$VLAN_RANGE'/g' /home/ubuntu/devstack/local.conf" 3
 else
