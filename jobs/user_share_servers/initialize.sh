@@ -1,11 +1,12 @@
 #!/bin/bash
 set -e
 
-source /usr/local/src/manila-ci/jobs/utils.sh
+basedir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+source $basedir/../utils.sh
 ensure_branch_supported || exit 0
 
 # Deploy devstack vm
-/usr/local/src/manila-ci/jobs/deploy_devstack_vm.sh
+$basedir/../deploy_devstack_vm.sh
 
 source /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 
@@ -16,7 +17,7 @@ run_ssh_cmd_with_retry ubuntu@$FIXED_IP $DEVSTACK_SSH_KEY  \
     'sed -i "s/iniset \$TEMPEST_CONFIG share build_timeout 2400/iniset \$TEMPEST_CONFIG share build_timeout 2400 \niniset \$TEMPEST_CONFIG share multitenancy_enabled False/g" /home/ubuntu/bin/run_tests.sh'
 
 # Run devstack
-/usr/local/src/manila-ci/jobs/run_devstack.sh
+$basedir/../run_devstack.sh
 
 run_ssh_cmd_with_retry ubuntu@$FIXED_IP $DEVSTACK_SSH_KEY \
     'source /home/ubuntu/keystonerc; NOVA_COUNT=$(nova service-list | grep nova-compute | grep -c -w up); if [ "$NOVA_COUNT" != 1 ];then nova service-list; exit 1;fi' 12

@@ -1,6 +1,7 @@
 #!/bin/bash
+basedir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 source /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
-source /usr/local/src/manila-ci/jobs/utils.sh
+source $basedir/utils.sh
 ensure_branch_supported || exit 0
 
 export FAILURE=0
