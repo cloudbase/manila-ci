@@ -134,7 +134,7 @@ set -e
 
 # Repository section
 echo "setup apt-cacher-ng:"
-run_ssh_cmd_with_retry ubuntu@$FIXED_IP $DEVSTACK_SSH_KEY 'echo "Acquire::http { Proxy \"http://10.20.1.32\" };" | sudo tee --append /etc/apt/apt.conf.d/90-apt-proxy.conf' 3
+run_ssh_cmd_with_retry ubuntu@$FIXED_IP $DEVSTACK_SSH_KEY 'echo "Acquire::http { Proxy \"http://10.20.1.36:8000\" };" | sudo tee --append /etc/apt/apt.conf.d/90-apt-proxy.conf' 3
 echo "clean any apt files:"
 run_ssh_cmd_with_retry ubuntu@$FIXED_IP $DEVSTACK_SSH_KEY "sudo rm -rfv /var/lib/apt/lists/*" 3
 echo "apt-get update:"
