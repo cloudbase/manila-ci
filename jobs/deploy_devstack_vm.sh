@@ -132,6 +132,8 @@ run_ssh_cmd_with_retry ubuntu@$FIXED_IP $DEVSTACK_SSH_KEY "sudo ethtool -K eth0 
 run_ssh_cmd_with_retry ubuntu@$FIXED_IP $DEVSTACK_SSH_KEY "sudo ethtool -K eth0 gro off" 3
 set -e
 
+run_ssh_cmd_with_retry ubuntu@$FIXED_IP $DEVSTACK_SSH_KEY "sed -i 's/export OS_AUTH_URL.*/export OS_AUTH_URL=http:\/\/127.0.0.1\/identity/g' /home/ubuntu/keystonerc" 3
+
 # Repository section
 echo "setup apt-cacher-ng:"
 run_ssh_cmd_with_retry ubuntu@$FIXED_IP $DEVSTACK_SSH_KEY 'echo "Acquire::http { Proxy \"http://10.20.1.36:8000\" };" | sudo tee --append /etc/apt/apt.conf.d/90-apt-proxy.conf' 3
