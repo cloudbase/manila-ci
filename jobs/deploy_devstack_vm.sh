@@ -116,6 +116,11 @@ sleep 5
 echo "Copy scripts to devstack VM"
 scp -v -r -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" -i $DEVSTACK_SSH_KEY $basedir/../devstack_vm/* ubuntu@$FIXED_IP:/home/ubuntu/
 
+#disable n-crt on master branch
+if [ "$ZUUL_BRANCH" == "master" ]; then
+    run_ssh_cmd_with_retry ubuntu@$FIXED_IP $DEVSTACK_SSH_KEY "sed -i 's/^enable_service n-crt/disable_service n-crt/' /home/ubuntu/devstack/local.conf" 1
+fi
+
 VLAN_RANGE=`exec_with_retry2 5 5 nonverbose $basedir/../vlan_allocation.py -a $VM_ID`
 if [ ! -z "$VLAN_RANGE" ]; then
     run_ssh_cmd_with_retry ubuntu@$FIXED_IP $DEVSTACK_SSH_KEY "sed -i 's/TENANT_VLAN_RANGE.*/TENANT_VLAN_RANGE='$VLAN_RANGE'/g' /home/ubuntu/devstack/local.conf" 3
