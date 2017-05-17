@@ -136,12 +136,11 @@ source /home/ubuntu/keystonerc
 
 MANILA_SERVICE_SECGROUP="manila-service"
 echo "Checking / creating $MANILA_SERVICE_SECGROUP security group"
+openstack security group rule list $MANILA_SERVICE_SECGROUP || openstack security group create $MANILA_SERVICE_SECGROUP
 
-nova secgroup-list-rules $MANILA_SERVICE_SECGROUP || nova secgroup-create $MANILA_SERVICE_SECGROUP $MANILA_SERVICE_SECGROUP
-
-echo "Adding security rules to the $MANILA_SERVICE_SECGROUP security group"
-nova secgroup-add-rule $MANILA_SERVICE_SECGROUP tcp 1 65535 0.0.0.0/0
-nova secgroup-add-rule $MANILA_SERVICE_SECGROUP udp 1 65535 0.0.0.0/0
 set +e
-nova secgroup-add-rule $MANILA_SERVICE_SECGROUP icmp -1 -1 0.0.0.0/0
+echo "Adding security rules to the $MANILA_SERVICE_SECGROUP security group"
+openstack security group rule create --protocol tcp --dst-port 1:65535 --remote-ip 0.0.0.0/0 $MANILA_SERVICE_SECGROUP
+openstack security group rule create --protocol udp --dst-port 1:65535 --remote-ip 0.0.0.0/0 $MANILA_SERVICE_SECGROUP
+openstack security group rule create --protocol icmp manila-service
 set -e
