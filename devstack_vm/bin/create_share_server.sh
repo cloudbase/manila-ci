@@ -5,16 +5,34 @@ MANILA_SERVICE_SECGROUP="manila-service"
 NET_ID=$(neutron net-list | grep private | awk '{print $2}')
 neutron net-update --shared=True private
 
-nova --os-username manila --os-tenant-name service --os-password Passw0rd \
-   secgroup-delete $MANILA_SERVICE_SECGROUP
-nova --os-username manila --os-tenant-name service --os-password Passw0rd \
-   secgroup-create $MANILA_SERVICE_SECGROUP $MANILA_SERVICE_SECGROUP
+
+openstack --os-username manila \
+	--os-tenant-name service \
+	--os-password Passw0rd \
+	--os-auth-url http://127.0.0.1/identity \
+	security group delete $MANILA_SERVICE_SECGROUP
+
+openstack --os-username manila \
+        --os-tenant-name service \
+        --os-password Passw0rd \
+        --os-auth-url http://127.0.0.1/identity \
+        security group create $MANILA_SERVICE_SECGROUP
 
 echo "Adding security rules to the $MANILA_SERVICE_SECGROUP security group"
-nova --os-username manila --os-tenant-name service --os-password Passw0rd \
-    secgroup-add-rule $MANILA_SERVICE_SECGROUP tcp 1 65535 0.0.0.0/0
-nova --os-username manila --os-tenant-name service --os-password Passw0rd \
-    secgroup-add-rule $MANILA_SERVICE_SECGROUP udp 1 65535 0.0.0.0/0
+
+openstack --os-username manila \
+        --os-tenant-name service \
+        --os-password Passw0rd \
+        --os-auth-url http://127.0.0.1/identity \
+	security group rule create --protocol tcp --dst-port 1:65535 \
+	--remote-ip 0.0.0.0/0 $MANILA_SERVICE_SECGROUP
+
+openstack --os-username manila \
+        --os-tenant-name service \
+        --os-password Passw0rd \
+        --os-auth-url http://127.0.0.1/identity \
+	security group rule create --protocol udp --dst-port 1:65535 \
+	--remote-ip 0.0.0.0/0 $MANILA_SERVICE_SECGROUP
 
 VM_OK=1
 RETRIES=5
