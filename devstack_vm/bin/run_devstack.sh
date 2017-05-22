@@ -96,6 +96,10 @@ then
         sed -i 's/^HOST_IP=.*/HOST_IP='$MYIP'/g' "$LOCALRC"
 fi
 
+# force older python-novaclient because version 8.0.0 does not work with manila
+# http://logs.openstack.org/01/443101/11/check/gate-manila-tempest-dsvm-mysql-generic-ubuntu-xenial-nv/fe0ca1b/logs/screen-m-shr.txt.gz
+sed -i "s/python-novaclient===8.0.0/python-novaclient===7.1.0/g" /opt/stack/requirements/upper-constraints.txt
+
 cd /home/ubuntu/devstack
 git pull
 
