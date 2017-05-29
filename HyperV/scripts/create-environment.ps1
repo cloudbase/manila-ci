@@ -186,6 +186,8 @@ ExecRetry {
 
 ExecRetry {
     pushd $buildDir\neutron
+    git fetch git://git.openstack.org/openstack/neutron refs/changes/33/468833/1
+    cherry_pick FETCH_HEAD
     & update-requirements.exe --source $buildDir\requirements .
     & pip install -c $buildDir\requirements\upper-constraints.txt -U .
     if ($LastExitCode) { Throw "Failed to install neutron from repo" }
