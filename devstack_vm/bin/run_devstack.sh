@@ -136,15 +136,3 @@ rotate_log $STACK_LOG $STACK_ROTATE_LIMIT
 set -o pipefail
 ./stack.sh 2>&1 | tee $STACK_LOG
 
-source /home/ubuntu/keystonerc
-
-MANILA_SERVICE_SECGROUP="manila-service"
-echo "Checking / creating $MANILA_SERVICE_SECGROUP security group"
-openstack security group rule list $MANILA_SERVICE_SECGROUP || openstack security group create $MANILA_SERVICE_SECGROUP
-
-set +e
-echo "Adding security rules to the $MANILA_SERVICE_SECGROUP security group"
-openstack security group rule create --protocol tcp --dst-port 1:65535 --remote-ip 0.0.0.0/0 $MANILA_SERVICE_SECGROUP
-openstack security group rule create --protocol udp --dst-port 1:65535 --remote-ip 0.0.0.0/0 $MANILA_SERVICE_SECGROUP
-openstack security group rule create --protocol icmp manila-service
-set -e
