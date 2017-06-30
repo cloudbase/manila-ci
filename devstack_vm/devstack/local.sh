@@ -27,3 +27,14 @@ manila type-key default set $SHARE_TYPE_EXTRA_SPECS
 # Revert this change back in Pike.
 # https://review.openstack.org/#/c/428840/
 #manila share-group-type-key default set $SHARE_TYPE_EXTRA_SPECS
+
+MANILA_SERVICE_SECGROUP="manila-service"
+echo "Checking / creating $MANILA_SERVICE_SECGROUP security group"
+openstack security group rule list $MANILA_SERVICE_SECGROUP || openstack security group create $MANILA_SERVICE_SECGROUP
+
+set +e
+echo "Adding security rules to the $MANILA_SERVICE_SECGROUP security group"
+openstack security group rule create --protocol tcp --dst-port 1:65535 --remote-ip 0.0.0.0/0 $MANILA_SERVICE_SECGROUP
+openstack security group rule create --protocol udp --dst-port 1:65535 --remote-ip 0.0.0.0/0 $MANILA_SERVICE_SECGROUP
+openstack security group rule create --protocol icmp manila-service
+set -e
