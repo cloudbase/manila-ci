@@ -233,13 +233,7 @@ pip install amqp==2.1.3
 $cpu_array = ([array](gwmi -class Win32_Processor))
 $cores_count = $cpu_array.count * $cpu_array[0].NumberOfCores
 
-if (($branchName -eq 'stable/newton') -or ($branchName -eq 'stable/ocata')) {
-    $celldb = "nova"
-} else {
-    $celldb = "nova_cell1"
-}
-
-$novaConfig = (gc "$templateDir\nova.conf").replace('[DEVSTACK_IP]', "$devstackIP").Replace('[LOGDIR]', "$openstackLogs").Replace('[RABBITUSER]', $rabbitUser).Replace('[CELLDB]', $celldb)
+$novaConfig = (gc "$templateDir\nova.conf").replace('[DEVSTACK_IP]', "$devstackIP").Replace('[LOGDIR]', "$openstackLogs").Replace('[RABBITUSER]', $rabbitUser)
 $neutronConfig = (gc "$templateDir\neutron_hyperv_agent.conf").replace('[DEVSTACK_IP]', "$devstackIP").Replace('[LOGDIR]', "$openstackLogs").Replace('[RABBITUSER]', $rabbitUser).Replace('[CORES_COUNT]', "$cores_count")
 
 if (($branchName -ne 'stable/liberty') -and ($branchName -ne 'stable/mitaka')) {
